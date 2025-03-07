@@ -11,10 +11,15 @@ dependencies:
   native_android_path: ^latest_version
 ```
 
+```yaml
+dependencies:
+  native_android_path: ^0.0.1
+```
+
 Then run:
 
 ```bash
-flutter pub get
+flutter pub get add native_android_path
 ```
 
 ## Usage
@@ -30,6 +35,9 @@ Create an instance of the `NativeAndroidPath` class:
 ```dart
 final nativeAndroidPath = NativeAndroidPath();
 ```
+
+![android_path](https://github.com/user-attachments/assets/3de1ec77-1b88-4ef5-baf4-90e5fccabb4f)
+
 
 ## Methods
 
