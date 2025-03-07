@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:native_android_path/native_android_path.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -16,6 +14,27 @@ class MyApp extends StatelessWidget {
       title: 'Native Android Path Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.grey[100],
+        appBarTheme: const AppBarTheme(
+          elevation: 0,
+          centerTitle: true,
+          backgroundColor: Colors.blue,
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        cardTheme: CardTheme(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        buttonTheme: const ButtonThemeData(
+          buttonColor: Colors.blue,
+          textTheme: ButtonTextTheme.primary,
+        ),
       ),
       home: const NativePathDemo(),
     );
@@ -33,6 +52,29 @@ class _NativePathDemoState extends State<NativePathDemo> {
   final _nativeAndroidPath = NativeAndroidPath();
   String _result = 'Press a button to see the result';
 
+  /// متد برای نمایش نتیجه در یک کارت زیبا
+  Widget _buildResultCard() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(_result, style: const TextStyle(fontSize: 16)),
+      ),
+    );
+  }
+
+  /// متد برای ایجاد دکمه‌های عملیاتی
+  Widget _buildActionButton(String text, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+      child: Text(text, style: const TextStyle(fontSize: 16)),
+    );
+  }
+
+  /// متدها برای دریافت مسیرها و نمایش نتایج
   Future<void> _getPlatformVersion() async {
     try {
       final version = await _nativeAndroidPath.getPlatformVersion();
@@ -50,7 +92,8 @@ class _NativePathDemoState extends State<NativePathDemo> {
     try {
       final paths = await _nativeAndroidPath.getAllPaths();
       setState(() {
-        _result = 'All Paths:\n${paths.entries.map((e) => '${e.key}: ${e.value}').join('\n')}';
+        _result =
+            'All Paths:\n${paths.entries.map((e) => '${e.key}: ${e.value}').join('\n')}';
       });
     } catch (e) {
       setState(() {
@@ -126,7 +169,9 @@ class _NativePathDemoState extends State<NativePathDemo> {
 
   Future<void> _getExternalStorageDirectories() async {
     try {
-      final paths = await _nativeAndroidPath.getExternalStorageDirectories('Pictures');
+      final paths = await _nativeAndroidPath.getExternalStorageDirectories(
+        'Pictures',
+      );
       setState(() {
         _result = 'External Picture Directories:\n${paths.join('\n')}';
       });
@@ -137,53 +182,90 @@ class _NativePathDemoState extends State<NativePathDemo> {
     }
   }
 
+  Future<void> _getPodcastsPath() async {
+    try {
+      final path = await _nativeAndroidPath.getPodcastsPath();
+      setState(() {
+        _result = 'Podcasts Path: ${path ?? 'Unknown'}';
+      });
+    } catch (e) {
+      setState(() {
+        _result = 'Error getting podcasts path: $e';
+      });
+    }
+  }
+
+  Future<void> _getScreenshotsPath() async {
+    try {
+      final path = await _nativeAndroidPath.getScreenshotsPath();
+      setState(() {
+        _result = 'Screenshots Path: ${path ?? 'Unknown'}';
+      });
+    } catch (e) {
+      setState(() {
+        _result = 'Error getting screenshots path: $e';
+      });
+    }
+  }
+
+  Future<void> _getAudiobooksPath() async {
+    try {
+      final path = await _nativeAndroidPath.getAudiobooksPath();
+      setState(() {
+        _result = 'Audiobooks Path: ${path ?? 'Unknown'}';
+      });
+    } catch (e) {
+      setState(() {
+        _result = 'Error getting audiobooks path: $e';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Native Android Path Demo'),
-      ),
+      appBar: AppBar(title: const Text('Native Android Path Demo')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 10,
           children: [
-            Text(
-              _result,
-              style: const TextStyle(fontSize: 16),
-            ),
+            _buildResultCard(),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _getPlatformVersion,
-              child: const Text('Get Platform Version'),
+
+            _buildActionButton('Get Platform Version', _getPlatformVersion),
+
+            _buildActionButton('Get All Paths', _getAllPaths),
+
+            _buildActionButton(
+              'Get Internal Storage Path',
+              _getInternalStoragePath,
             ),
-            ElevatedButton(
-              onPressed: _getAllPaths,
-              child: const Text('Get All Paths'),
+
+            _buildActionButton(
+              'Get External Storage Path',
+              _getExternalStoragePath,
             ),
-            ElevatedButton(
-              onPressed: _getInternalStoragePath,
-              child: const Text('Get Internal Storage Path'),
+
+            _buildActionButton('Get Download Path', _getDownloadPath),
+
+            _buildActionButton('Get Pictures Path', _getPicturesPath),
+
+            _buildActionButton('Get Podcasts Path', _getPodcastsPath),
+
+            _buildActionButton('Get Screenshots Path', _getScreenshotsPath),
+
+            _buildActionButton('Get Audiobooks Path', _getAudiobooksPath),
+
+            _buildActionButton(
+              'Is External Storage Writable',
+              _isExternalStorageWritable,
             ),
-            ElevatedButton(
-              onPressed: _getExternalStoragePath,
-              child: const Text('Get External Storage Path'),
-            ),
-            ElevatedButton(
-              onPressed: _getDownloadPath,
-              child: const Text('Get Download Path'),
-            ),
-            ElevatedButton(
-              onPressed: _getPicturesPath,
-              child: const Text('Get Pictures Path'),
-            ),
-            ElevatedButton(
-              onPressed: _isExternalStorageWritable,
-              child: const Text('Is External Storage Writable'),
-            ),
-            ElevatedButton(
-              onPressed: _getExternalStorageDirectories,
-              child: const Text('Get External Picture Directories'),
+
+            _buildActionButton(
+              'Get External Picture Directories',
+              _getExternalStorageDirectories,
             ),
           ],
         ),

@@ -423,12 +423,6 @@ class _MyAppState extends State<MyApp> {
 
 ## Permissions
 
-To access external storage paths on Android, you need to add the following permissions to your `AndroidManifest.xml`:
-
-```xml
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-```
 
 For Android 10 (API level 29) and above, you might need to add:
 
@@ -440,3 +434,155 @@ For Android 10 (API level 29) and above, you might need to add:
 ```
 
 For Android 11 (API level 30) and above, consider implementing more specific storage access using the Storage Access Framework or Media Store API.
+
+
+### **Required Permissions for Android 13**
+
+1. **General Permissions**:
+   - To access external files, you still need the `READ_EXTERNAL_STORAGE` and `WRITE_EXTERNAL_STORAGE` permissions.
+
+   ```xml
+   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+   ```
+
+2. **Specific Permissions for Android 13**:
+   - In Android 13, access to media files (such as photos, videos, and music) is controlled separately. To access these files, you must use **specific permissions**:
+     - `READ_MEDIA_IMAGES`: For accessing photos.
+     - `READ_MEDIA_VIDEO`: For accessing videos.
+     - `READ_MEDIA_AUDIO`: For accessing audio files.
+
+   ```xml
+   <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+   <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+   <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+   ```
+
+3. **Requesting Permissions at Runtime**:
+   - In Android 13, you must request specific permissions at runtime from the user. This is done using `ActivityResultContracts.RequestPermission` or `ActivityResultContracts.RequestMultiplePermissions`.
+
+   Example of requesting permission to access photos:
+
+   ```dart
+   import 'package:flutter/material.dart';
+   import 'package:permission_master/permission_master.dart';
+
+   Future<void> requestMediaPermissions() async {
+     final permissionMaster = PermissionMaster();
+     final status = await permissionMaster.requestStoragePermission();
+
+     if (status == 'GRANTED') {
+       print('Media permissions granted');
+     } else if (status == 'OPEN_SETTINGS') {
+       // Permanent denial, suggest opening app settings
+       await permissionMaster.openAppSettings();
+     } else {
+       print('Media permissions denied');
+     }
+   }
+   ```
+
+---
+
+### **`AndroidManifest.xml` Settings for Android 13**
+
+To support Android 13, your `AndroidManifest.xml` file should look like this:
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.yourapp">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+
+    <application
+        android:requestLegacyExternalStorage="true"
+        android:label="Your App"
+        android:icon="@mipmap/ic_launcher">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+```
+
+---
+
+### **Important Changes for Android 13**
+
+1. **Removal of `requestLegacyExternalStorage`**:
+   - In Android 11 (API level 30) and above, the `requestLegacyExternalStorage` attribute was used to maintain compatibility with the old file system. However, in Android 13, this attribute **is no longer supported**, and you must use **specific permissions** instead.
+
+2. **Use of `MediaStore`**:
+   - To access media files in Android 13, you must use `MediaStore`. This API allows you to access photo, video, and music files.
+
+---
+
+### **Requesting Permissions at Runtime**
+
+To request permissions at runtime, you can use the `permission_master` package. This package helps you request and manage permissions easily.
+
+#### **Setup and Initialization**
+
+1. **Import the Package**
+   ```dart
+   import 'package:permission_master/permission_master.dart';
+   ```
+
+2. **Set BuildContext (Important for Dialogs)**
+   ```dart
+   class _MyAppState extends State<MyApp> {
+     @override
+     void initState() {
+       super.initState();
+       // Set context for dialog support
+       PermissionMaster.setContext(context);
+     }
+   }
+   ```
+
+#### **Storage Permission Example**
+
+```dart
+Future<void> requestStorageAccess() async {
+  final permissionMaster = PermissionMaster();
+  final status = await permissionMaster.requestStoragePermission();
+
+  if (status == 'GRANTED') {
+    // Read/write files allowed
+  } else if (status == 'OPEN_SETTINGS') {
+    // Permanent denial, suggest opening app settings
+    await permissionMaster.openAppSettings();
+  } else {
+    print('Storage permission not granted');
+  }
+}
+```
+
+#### **Adding Dependencies**
+
+In your `pubspec.yaml` file, add the package:
+
+```yaml
+dependencies:
+  permission_master:
+    git:
+      url: https://github.com/SwanFlutter/permission_master.git
+```
+
+#### **Note**
+
+If you use `permission_master`, you still need to add the necessary permissions to the `AndroidManifest.xml` file. Also, the `android:requestLegacyExternalStorage="true"` attribute should still be included in the application tag.
+
+
+

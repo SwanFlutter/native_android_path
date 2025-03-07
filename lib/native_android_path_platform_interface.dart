@@ -32,19 +32,27 @@ abstract class NativeAndroidPathPlatform extends PlatformInterface {
   }
 
   Future<String?> getInternalStoragePath() {
-    throw UnimplementedError('getInternalStoragePath() has not been implemented.');
+    throw UnimplementedError(
+      'getInternalStoragePath() has not been implemented.',
+    );
   }
 
   Future<String?> getExternalStoragePath() {
-    throw UnimplementedError('getExternalStoragePath() has not been implemented.');
+    throw UnimplementedError(
+      'getExternalStoragePath() has not been implemented.',
+    );
   }
 
   Future<String?> getInternalCachePath() {
-    throw UnimplementedError('getInternalCachePath() has not been implemented.');
+    throw UnimplementedError(
+      'getInternalCachePath() has not been implemented.',
+    );
   }
 
   Future<String?> getExternalCachePath() {
-    throw UnimplementedError('getExternalCachePath() has not been implemented.');
+    throw UnimplementedError(
+      'getExternalCachePath() has not been implemented.',
+    );
   }
 
   Future<String?> getDownloadPath() {
@@ -76,22 +84,42 @@ abstract class NativeAndroidPathPlatform extends PlatformInterface {
   }
 
   Future<String?> getNotificationsPath() {
-    throw UnimplementedError('getNotificationsPath() has not been implemented.');
+    throw UnimplementedError(
+      'getNotificationsPath() has not been implemented.',
+    );
   }
 
   Future<String?> getDocumentsPath() {
     throw UnimplementedError('getDocumentsPath() has not been implemented.');
   }
 
+  Future<String?> getPodcastsPath() {
+    throw UnimplementedError('getPodcastsPath() has not been implemented.');
+  }
+
+  Future<String?> getScreenshotsPath() {
+    throw UnimplementedError('getScreenshotsPath() has not been implemented.');
+  }
+
+  Future<String?> getAudiobooksPath() {
+    throw UnimplementedError('getAudiobooksPath() has not been implemented.');
+  }
+
   Future<bool> isExternalStorageWritable() {
-    throw UnimplementedError('isExternalStorageWritable() has not been implemented.');
+    throw UnimplementedError(
+      'isExternalStorageWritable() has not been implemented.',
+    );
   }
 
   Future<bool> isExternalStorageReadable() {
-    throw UnimplementedError('isExternalStorageReadable() has not been implemented.');
+    throw UnimplementedError(
+      'isExternalStorageReadable() has not been implemented.',
+    );
   }
 
   Future<List<String>> getExternalStorageDirectories(String type) {
-    throw UnimplementedError('getExternalStorageDirectories() has not been implemented.');
+    throw UnimplementedError(
+      'getExternalStorageDirectories() has not been implemented.',
+    );
   }
 }

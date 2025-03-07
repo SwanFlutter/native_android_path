@@ -14,7 +14,9 @@ class MethodChannelNativeAndroidPath extends NativeAndroidPathPlatform {
   @override
   Future<String?> getPlatformVersion() async {
     try {
-      final String? version = await methodChannel.invokeMethod<String>('getPlatformVersion');
+      final String? version = await methodChannel.invokeMethod<String>(
+        'getPlatformVersion',
+      );
       return version;
     } on PlatformException catch (e) {
       debugPrint('Error getting platform version: ${e.message}');
@@ -31,8 +33,13 @@ class MethodChannelNativeAndroidPath extends NativeAndroidPathPlatform {
           message: 'This method is only supported on Android.',
         );
       }
-      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod('getAllPaths');
-      return result?.map((key, value) => MapEntry(key.toString(), value?.toString())) ?? {};
+      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod(
+        'getAllPaths',
+      );
+      return result?.map(
+            (key, value) => MapEntry(key.toString(), value?.toString()),
+          ) ??
+          {};
     } on PlatformException catch (e) {
       debugPrint('Error getting all paths: ${e.message}');
       return <String, String?>{};
@@ -128,7 +135,9 @@ class MethodChannelNativeAndroidPath extends NativeAndroidPathPlatform {
           message: 'This method is only supported on Android.',
         );
       }
-      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod('getAllPaths');
+      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod(
+        'getAllPaths',
+      );
       return result?['dcim']?.toString();
     } on PlatformException catch (e) {
       debugPrint('Error getting DCIM path: ${e.message}');
@@ -145,7 +154,9 @@ class MethodChannelNativeAndroidPath extends NativeAndroidPathPlatform {
           message: 'This method is only supported on Android.',
         );
       }
-      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod('getAllPaths');
+      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod(
+        'getAllPaths',
+      );
       return result?['pictures']?.toString();
     } on PlatformException catch (e) {
       debugPrint('Error getting pictures path: ${e.message}');
@@ -162,7 +173,9 @@ class MethodChannelNativeAndroidPath extends NativeAndroidPathPlatform {
           message: 'This method is only supported on Android.',
         );
       }
-      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod('getAllPaths');
+      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod(
+        'getAllPaths',
+      );
       return result?['movies']?.toString();
     } on PlatformException catch (e) {
       debugPrint('Error getting movies path: ${e.message}');
@@ -179,7 +192,9 @@ class MethodChannelNativeAndroidPath extends NativeAndroidPathPlatform {
           message: 'This method is only supported on Android.',
         );
       }
-      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod('getAllPaths');
+      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod(
+        'getAllPaths',
+      );
       return result?['music']?.toString();
     } on PlatformException catch (e) {
       debugPrint('Error getting music path: ${e.message}');
@@ -196,7 +211,9 @@ class MethodChannelNativeAndroidPath extends NativeAndroidPathPlatform {
           message: 'This method is only supported on Android.',
         );
       }
-      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod('getAllPaths');
+      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod(
+        'getAllPaths',
+      );
       return result?['ringtones']?.toString();
     } on PlatformException catch (e) {
       debugPrint('Error getting ringtones path: ${e.message}');
@@ -213,7 +230,9 @@ class MethodChannelNativeAndroidPath extends NativeAndroidPathPlatform {
           message: 'This method is only supported on Android.',
         );
       }
-      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod('getAllPaths');
+      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod(
+        'getAllPaths',
+      );
       return result?['alarms']?.toString();
     } on PlatformException catch (e) {
       debugPrint('Error getting alarms path: ${e.message}');
@@ -230,7 +249,9 @@ class MethodChannelNativeAndroidPath extends NativeAndroidPathPlatform {
           message: 'This method is only supported on Android.',
         );
       }
-      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod('getAllPaths');
+      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod(
+        'getAllPaths',
+      );
       return result?['notifications']?.toString();
     } on PlatformException catch (e) {
       debugPrint('Error getting notifications path: ${e.message}');
@@ -247,10 +268,69 @@ class MethodChannelNativeAndroidPath extends NativeAndroidPathPlatform {
           message: 'This method is only supported on Android.',
         );
       }
-      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod('getAllPaths');
+      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod(
+        'getAllPaths',
+      );
       return result?['documents']?.toString();
     } on PlatformException catch (e) {
       debugPrint('Error getting documents path: ${e.message}');
+      return null;
+    }
+  }
+
+  @override
+  Future<String?> getPodcastsPath() async {
+    try {
+      if (!Platform.isAndroid) {
+        throw PlatformException(
+          code: 'UNSUPPORTED_PLATFORM',
+          message: 'This method is only supported on Android.',
+        );
+      }
+      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod(
+        'getAllPaths',
+      );
+      return result?['podcasts']?.toString();
+    } on PlatformException catch (e) {
+      debugPrint('Error getting podcasts path: ${e.message}');
+      return null;
+    }
+  }
+
+  @override
+  Future<String?> getScreenshotsPath() async {
+    try {
+      if (!Platform.isAndroid) {
+        throw PlatformException(
+          code: 'UNSUPPORTED_PLATFORM',
+          message: 'This method is only supported on Android.',
+        );
+      }
+      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod(
+        'getAllPaths',
+      );
+      return result?['screenshots']?.toString();
+    } on PlatformException catch (e) {
+      debugPrint('Error getting screenshots path: ${e.message}');
+      return null;
+    }
+  }
+
+  @override
+  Future<String?> getAudiobooksPath() async {
+    try {
+      if (!Platform.isAndroid) {
+        throw PlatformException(
+          code: 'UNSUPPORTED_PLATFORM',
+          message: 'This method is only supported on Android.',
+        );
+      }
+      final Map<dynamic, dynamic>? result = await methodChannel.invokeMethod(
+        'getAllPaths',
+      );
+      return result?['audiobooks']?.toString();
+    } on PlatformException catch (e) {
+      debugPrint('Error getting audiobooks path: ${e.message}');
       return null;
     }
   }
@@ -264,10 +344,14 @@ class MethodChannelNativeAndroidPath extends NativeAndroidPathPlatform {
           message: 'This method is only supported on Android.',
         );
       }
-      final bool result = await methodChannel.invokeMethod('isExternalStorageWritable');
+      final bool result = await methodChannel.invokeMethod(
+        'isExternalStorageWritable',
+      );
       return result;
     } on PlatformException catch (e) {
-      debugPrint('Error checking if external storage is writable: ${e.message}');
+      debugPrint(
+        'Error checking if external storage is writable: ${e.message}',
+      );
       return false;
     }
   }
@@ -281,10 +365,14 @@ class MethodChannelNativeAndroidPath extends NativeAndroidPathPlatform {
           message: 'This method is only supported on Android.',
         );
       }
-      final bool result = await methodChannel.invokeMethod('isExternalStorageReadable');
+      final bool result = await methodChannel.invokeMethod(
+        'isExternalStorageReadable',
+      );
       return result;
     } on PlatformException catch (e) {
-      debugPrint('Error checking if external storage is readable: ${e.message}');
+      debugPrint(
+        'Error checking if external storage is readable: ${e.message}',
+      );
       return false;
     }
   }

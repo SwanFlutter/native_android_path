@@ -167,6 +167,24 @@ class NativeAndroidPathPlugin: FlutterPlugin, MethodCallHandler {
       paths["documents"] = null
     }
 
+    try {
+      paths["podcasts"] = getPodcastsPath()
+    } catch (e: Exception) {
+      paths["podcasts"] = null
+    }
+
+    try {
+      paths["screenshots"] = getScreenshotsPath()
+    } catch (e: Exception) {
+      paths["screenshots"] = null
+    }
+
+    try {
+      paths["audiobooks"] = getAudiobooksPath()
+    } catch (e: Exception) {
+      paths["audiobooks"] = null
+    }
+
     return paths
   }
 
@@ -272,6 +290,49 @@ class NativeAndroidPathPlugin: FlutterPlugin, MethodCallHandler {
     }
 
     return paths
+  }
+
+
+  private fun getPodcastsPath(): String? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // Android 10 یا بالاتر
+      context.getExternalFilesDir(Environment.DIRECTORY_PODCASTS)?.absolutePath
+        ?: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS)?.absolutePath
+    } else {
+      // برای نسخه‌های قدیمی‌تر، یک دایرکتوری Podcasts در حافظه خارجی ایجاد می‌کنیم
+      val podcasts = File(Environment.getExternalStorageDirectory(), "Podcasts")
+      if (!podcasts.exists()) {
+        podcasts.mkdirs()
+      }
+      podcasts.absolutePath
+    }
+  }
+
+  private fun getScreenshotsPath(): String? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // Android 10 یا بالاتر
+      context.getExternalFilesDir(Environment.DIRECTORY_SCREENSHOTS)?.absolutePath
+        ?: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_SCREENSHOTS)?.absolutePath
+    } else {
+      // برای نسخه‌های قدیمی‌تر، یک دایرکتوری Screenshots در پوشه Pictures ایجاد می‌کنیم
+      val screenshots = File(Environment.getExternalStorageDirectory(), "Pictures/Screenshots")
+      if (!screenshots.exists()) {
+        screenshots.mkdirs()
+      }
+      screenshots.absolutePath
+    }
+  }
+
+
+  private fun getAudiobooksPath(): String? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // Android 10 یا بالاتر
+      context.getExternalFilesDir(Environment.DIRECTORY_AUDIOBOOKS)?.absolutePath
+        ?: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_AUDIOBOOKS)?.absolutePath
+    } else {
+      val audiobooks = File(Environment.getExternalStorageDirectory(), "Audiobooks")
+      if (!audiobooks.exists()) {
+        audiobooks.mkdirs()
+      }
+      audiobooks.absolutePath
+    }
   }
 
   private fun isExternalStorageWritable(): Boolean {

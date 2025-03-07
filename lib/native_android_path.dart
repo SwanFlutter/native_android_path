@@ -213,6 +213,60 @@ class NativeAndroidPath {
     return NativeAndroidPathPlatform.instance.getDocumentsPath();
   }
 
+  /// Returns the path to the Podcasts directory.
+  ///
+  /// This method retrieves the full path to the Podcasts directory on the device.
+  /// Returns null if the directory is not found or an error occurs.
+  ///
+  /// Example:
+  /// ```dart
+  /// String? podcastsPath = await NativeAndroidPath().getPodcastsPath();
+  /// if (podcastsPath != null) {
+  ///   print('Podcasts Path: $podcastsPath');
+  /// } else {
+  ///   print('Podcasts directory not found or an error occurred.');
+  /// }
+  /// ```
+  Future<String?> getPodcastsPath() {
+    return NativeAndroidPathPlatform.instance.getPodcastsPath();
+  }
+
+  /// Returns the path to the Screenshots directory.
+  ///
+  /// This method retrieves the full path to the Screenshots directory on the device.
+  /// Returns null if the directory is not found or an error occurs.
+  ///
+  /// Example:
+  /// ```dart
+  /// String? screenshotsPath = await NativeAndroidPath().getScreenshotsPath();
+  /// if (screenshotsPath != null) {
+  ///   print('Screenshots Path: $screenshotsPath');
+  /// } else {
+  ///   print('Screenshots directory not found or an error occurred.');
+  /// }
+  /// ```
+  Future<String?> getScreenshotsPath() {
+    return NativeAndroidPathPlatform.instance.getScreenshotsPath();
+  }
+
+  /// Returns the path to the Audiobooks directory.
+  ///
+  /// This method retrieves the full path to the Audiobooks directory on the device.
+  /// Returns null if the directory is not found or an error occurs.
+  ///
+  /// Example:
+  /// ```dart
+  /// String? audiobooksPath = await NativeAndroidPath().getAudiobooksPath();
+  /// if (audiobooksPath != null) {
+  ///   print('Audiobooks Path: $audiobooksPath');
+  /// } else {
+  ///   print('Audiobooks directory not found or an error occurred.');
+  /// }
+  /// ```
+  Future<String?> getAudiobooksPath() {
+    return NativeAndroidPathPlatform.instance.getAudiobooksPath();
+  }
+
   /// Checks if external storage is writable.
   ///
   /// This method checks if the external storage (SD card) is writable.
@@ -222,6 +276,7 @@ class NativeAndroidPath {
   /// ```dart
   /// bool isWritable = await NativeAndroidPath().isExternalStorageWritable();
   /// print('External Storage Writable: $isWritable');
+  ///
   /// ```
   Future<bool> isExternalStorageWritable() {
     return NativeAndroidPathPlatform.instance.isExternalStorageWritable();
@@ -266,7 +321,7 @@ class NativeAndroidPath {
   ///   - `type`: The type of storage directory (e.g., "Pictures", "Movies", "Music").
   Future<List<String>> getExternalStorageDirectories(String type) {
     return NativeAndroidPathPlatform.instance.getExternalStorageDirectories(
-        type);
+      type,
+    );
   }
-
 }
