@@ -33,7 +33,9 @@ import 'package:native_android_path/native_android_path.dart';
 Create an instance of the `NativeAndroidPath` class:
 
 ```dart
+
 final nativeAndroidPath = NativeAndroidPath();
+
 ```
 
 ![android_path](https://github.com/user-attachments/assets/3de1ec77-1b88-4ef5-baf4-90e5fccabb4f)
@@ -479,9 +481,9 @@ For Android 11 (API level 30) and above, consider implementing more specific sto
      final permissionMaster = PermissionMaster();
      final status = await permissionMaster.requestStoragePermission();
 
-     if (status == 'GRANTED') {
+     if (status == PermissionStatus.granted) {
        print('Media permissions granted');
-     } else if (status == 'OPEN_SETTINGS') {
+     } else if (status == PermissionStatus.openSettings) {
        // Permanent denial, suggest opening app settings
        await permissionMaster.openAppSettings();
      } else {
@@ -562,19 +564,21 @@ To request permissions at runtime, you can use the `permission_master` package. 
 #### **Storage Permission Example**
 
 ```dart
+
 Future<void> requestStorageAccess() async {
   final permissionMaster = PermissionMaster();
   final status = await permissionMaster.requestStoragePermission();
 
-  if (status == 'GRANTED') {
+  if (status == PermissionStatus.granted) {
     // Read/write files allowed
-  } else if (status == 'OPEN_SETTINGS') {
+  } else if (status == PermissionStatus.openSettings) {
     // Permanent denial, suggest opening app settings
     await permissionMaster.openAppSettings();
   } else {
     print('Storage permission not granted');
   }
 }
+
 ```
 
 #### **Adding Dependencies**

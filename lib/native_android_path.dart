@@ -10,6 +10,8 @@ class NativeAndroidPath {
   /// ```dart
   /// String? platformVersion = await NativeAndroidPath().getPlatformVersion();
   /// print('Android Version: $platformVersion');
+  ///
+  ///
   /// ```
   Future<String?> getPlatformVersion() {
     return NativeAndroidPathPlatform.instance.getPlatformVersion();
@@ -26,6 +28,8 @@ class NativeAndroidPath {
   /// paths.forEach((key, value) {
   ///   print('$key: $value');
   /// });
+  ///
+  ///
   /// ```
   Future<Map<String, String?>> getAllPaths() {
     return NativeAndroidPathPlatform.instance.getAllPaths();
@@ -40,6 +44,8 @@ class NativeAndroidPath {
   /// ```dart
   /// String? internalPath = await NativeAndroidPath().getInternalStoragePath();
   /// print('Internal Storage Path: $internalPath');
+  ///
+  ///
   /// ```
   Future<String?> getInternalStoragePath() {
     return NativeAndroidPathPlatform.instance.getInternalStoragePath();
@@ -54,6 +60,8 @@ class NativeAndroidPath {
   /// ```dart
   /// String? externalPath = await NativeAndroidPath().getExternalStoragePath();
   /// print('External Storage Path: $externalPath');
+  ///
+  ///
   /// ```
   Future<String?> getExternalStoragePath() {
     return NativeAndroidPathPlatform.instance.getExternalStoragePath();
@@ -68,6 +76,8 @@ class NativeAndroidPath {
   /// ```dart
   /// String? internalCachePath = await NativeAndroidPath().getInternalCachePath();
   /// print('Internal Cache Path: $internalCachePath');
+  ///
+  ///
   /// ```
   Future<String?> getInternalCachePath() {
     return NativeAndroidPathPlatform.instance.getInternalCachePath();
@@ -82,6 +92,8 @@ class NativeAndroidPath {
   /// ```dart
   /// String? externalCachePath = await NativeAndroidPath().getExternalCachePath();
   /// print('External Cache Path: $externalCachePath');
+  ///
+  ///
   /// ```
   Future<String?> getExternalCachePath() {
     return NativeAndroidPathPlatform.instance.getExternalCachePath();
@@ -96,6 +108,8 @@ class NativeAndroidPath {
   /// ```dart
   /// String? downloadPath = await NativeAndroidPath().getDownloadPath();
   /// print('Download Path: $downloadPath');
+  ///
+  ///
   /// ```
   Future<String?> getDownloadPath() {
     return NativeAndroidPathPlatform.instance.getDownloadPath();
@@ -110,6 +124,8 @@ class NativeAndroidPath {
   /// ```dart
   /// String? dcimPath = await NativeAndroidPath().getDCIMPath();
   /// print('DCIM Path: $dcimPath');
+  ///
+  ///
   /// ```
   Future<String?> getDCIMPath() {
     return NativeAndroidPathPlatform.instance.getDCIMPath();
@@ -124,6 +140,8 @@ class NativeAndroidPath {
   /// ```dart
   /// String? picturesPath = await NativeAndroidPath().getPicturesPath();
   /// print('Pictures Path: $picturesPath');
+  ///
+  ///
   /// ```
   Future<String?> getPicturesPath() {
     return NativeAndroidPathPlatform.instance.getPicturesPath();
@@ -138,6 +156,8 @@ class NativeAndroidPath {
   /// ```dart
   /// String? moviesPath = await NativeAndroidPath().getMoviesPath();
   /// print('Movies Path: $moviesPath');
+  ///
+  ///
   /// ```
   Future<String?> getMoviesPath() {
     return NativeAndroidPathPlatform.instance.getMoviesPath();
@@ -152,6 +172,8 @@ class NativeAndroidPath {
   /// ```dart
   /// String? musicPath = await NativeAndroidPath().getMusicPath();
   /// print('Music Path: $musicPath');
+  ///
+  ///
   /// ```
   Future<String?> getMusicPath() {
     return NativeAndroidPathPlatform.instance.getMusicPath();
@@ -166,6 +188,8 @@ class NativeAndroidPath {
   /// ```dart
   /// String? ringtonesPath = await NativeAndroidPath().getRingtonesPath();
   /// print('Ringtones Path: $ringtonesPath');
+  ///
+  ///
   /// ```
   Future<String?> getRingtonesPath() {
     return NativeAndroidPathPlatform.instance.getRingtonesPath();
@@ -180,6 +204,8 @@ class NativeAndroidPath {
   /// ```dart
   /// String? alarmsPath = await NativeAndroidPath().getAlarmsPath();
   /// print('Alarms Path: $alarmsPath');
+  ///
+  ///
   /// ```
   Future<String?> getAlarmsPath() {
     return NativeAndroidPathPlatform.instance.getAlarmsPath();
@@ -194,6 +220,8 @@ class NativeAndroidPath {
   /// ```dart
   /// String? notificationsPath = await NativeAndroidPath().getNotificationsPath();
   /// print('Notifications Path: $notificationsPath');
+  ///
+  ///
   /// ```
   Future<String?> getNotificationsPath() {
     return NativeAndroidPathPlatform.instance.getNotificationsPath();
@@ -208,6 +236,8 @@ class NativeAndroidPath {
   /// ```dart
   /// String? documentsPath = await NativeAndroidPath().getDocumentsPath();
   /// print('Documents Path: $documentsPath');
+  ///
+  ///
   /// ```
   Future<String?> getDocumentsPath() {
     return NativeAndroidPathPlatform.instance.getDocumentsPath();
@@ -226,6 +256,8 @@ class NativeAndroidPath {
   /// } else {
   ///   print('Podcasts directory not found or an error occurred.');
   /// }
+  ///
+  ///
   /// ```
   Future<String?> getPodcastsPath() {
     return NativeAndroidPathPlatform.instance.getPodcastsPath();
@@ -244,6 +276,8 @@ class NativeAndroidPath {
   /// } else {
   ///   print('Screenshots directory not found or an error occurred.');
   /// }
+  ///
+  ///
   /// ```
   Future<String?> getScreenshotsPath() {
     return NativeAndroidPathPlatform.instance.getScreenshotsPath();
@@ -262,6 +296,8 @@ class NativeAndroidPath {
   /// } else {
   ///   print('Audiobooks directory not found or an error occurred.');
   /// }
+  ///
+  ///
   /// ```
   Future<String?> getAudiobooksPath() {
     return NativeAndroidPathPlatform.instance.getAudiobooksPath();
@@ -277,6 +313,7 @@ class NativeAndroidPath {
   /// bool isWritable = await NativeAndroidPath().isExternalStorageWritable();
   /// print('External Storage Writable: $isWritable');
   ///
+  ///
   /// ```
   Future<bool> isExternalStorageWritable() {
     return NativeAndroidPathPlatform.instance.isExternalStorageWritable();
@@ -291,7 +328,10 @@ class NativeAndroidPath {
   /// ```dart
   /// bool isReadable = await NativeAndroidPath().isExternalStorageReadable();
   /// print('External Storage Readable: $isReadable');
+  ///
+  ///
   /// ```
+  ///
   Future<bool> isExternalStorageReadable() {
     return NativeAndroidPathPlatform.instance.isExternalStorageReadable();
   }
@@ -315,13 +355,13 @@ class NativeAndroidPath {
   /// } else {
   ///   print('No external Picture directories found.');
   /// }
+  ///
+  ///
   /// ```
   ///
   /// Parameters:
   ///   - `type`: The type of storage directory (e.g., "Pictures", "Movies", "Music").
   Future<List<String>> getExternalStorageDirectories(String type) {
-    return NativeAndroidPathPlatform.instance.getExternalStorageDirectories(
-      type,
-    );
+    return NativeAndroidPathPlatform.instance.getExternalStorageDirectories(type);
   }
 }
