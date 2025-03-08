@@ -362,6 +362,8 @@ class NativeAndroidPath {
   /// Parameters:
   ///   - `type`: The type of storage directory (e.g., "Pictures", "Movies", "Music").
   Future<List<String>> getExternalStorageDirectories(String type) {
-    return NativeAndroidPathPlatform.instance.getExternalStorageDirectories(type);
+    return NativeAndroidPathPlatform.instance.getExternalStorageDirectories(
+      type,
+    );
   }
 }
