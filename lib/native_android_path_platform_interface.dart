@@ -3,7 +3,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'native_android_path_method_channel.dart';
 
 abstract class NativeAndroidPathPlatform extends PlatformInterface {
-  /// Constructs a NativeAndroidPathPlatform.
+  // Constructs a NativeAndroidPathPlatform.
   NativeAndroidPathPlatform() : super(token: _token);
 
   static final Object _token = Object();

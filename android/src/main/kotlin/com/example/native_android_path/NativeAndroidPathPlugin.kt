@@ -10,10 +10,9 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import java.io.File
 import java.util.HashMap
+import android.util.Log
 
-/** NativeAndroidPathPlugin */
-class NativeAndroidPathPlugin: FlutterPlugin, MethodCallHandler {
-  /// The MethodChannel that will the communication between Flutter and native Android
+class NativeAndroidPathPlugin : FlutterPlugin, MethodCallHandler {
   private lateinit var channel: MethodChannel
   private lateinit var context: Context
 
@@ -26,164 +25,107 @@ class NativeAndroidPathPlugin: FlutterPlugin, MethodCallHandler {
   override fun onMethodCall(call: MethodCall, result: Result) {
     try {
       when (call.method) {
-        "getPlatformVersion" -> {
-          result.success("Android ${Build.VERSION.RELEASE}")
-        }
-        "getAllPaths" -> {
-          result.success(getAllStoragePaths())
-        }
+        "getPlatformVersion" -> result.success("Android ${Build.VERSION.RELEASE}")
+        "getAllPaths" -> result.success(getAllStoragePaths())
+        "getInternalStoragePath" -> result.success(getInternalStoragePath())
         "getExternalStoragePath" -> {
-          val externalStoragePath = getExternalStoragePath()
-          if (externalStoragePath != null) {
-            result.success(externalStoragePath)
-          } else {
-            result.error("EXTERNAL_STORAGE_ERROR", "External storage is not available", null)
-          }
+          val path = getExternalStoragePath()
+          if (path != null) result.success(path) else result.error("EXTERNAL_STORAGE_ERROR", "External storage not available", null)
         }
-        "getInternalStoragePath" -> {
-          result.success(getInternalStoragePath())
-        }
+        "getInternalCachePath" -> result.success(getInternalCachePath())
         "getExternalCachePath" -> {
-          val externalCachePath = getExternalCachePath()
-          if (externalCachePath != null) {
-            result.success(externalCachePath)
-          } else {
-            result.error("EXTERNAL_CACHE_ERROR", "External cache directory is not available", null)
-          }
-        }
-        "getInternalCachePath" -> {
-          result.success(getInternalCachePath())
+          val path = getExternalCachePath()
+          if (path != null) result.success(path) else result.error("EXTERNAL_CACHE_ERROR", "External cache directory not available", null)
         }
         "getDownloadPath" -> {
-          val downloadPath = getDownloadPath()
-          if (downloadPath != null) {
-            result.success(downloadPath)
-          } else {
-            result.error("DOWNLOAD_PATH_ERROR", "Download directory is not available", null)
-          }
+          val path = getDownloadPath()
+          Log.d("NativeAndroidPath", "Download Path: $path")
+          if (path != null) result.success(path) else result.error("DOWNLOAD_PATH_ERROR", "Download directory not available", null)
         }
+        "getDCIMPath" -> {
+          val path = getDCIMPath()
+          if (path != null) result.success(path) else result.error("DCIM_PATH_ERROR", "DCIM directory not available", null)
+        }
+        "getPicturesPath" -> {
+          val path = getPicturesPath()
+          if (path != null) result.success(path) else result.error("PICTURES_PATH_ERROR", "Pictures directory not available", null)
+        }
+        "getMoviesPath" -> {
+          val path = getMoviesPath()
+          if (path != null) result.success(path) else result.error("MOVIES_PATH_ERROR", "Movies directory not available", null)
+        }
+        "getMusicPath" -> {
+          val path = getMusicPath()
+          if (path != null) result.success(path) else result.error("MUSIC_PATH_ERROR", "Music directory not available", null)
+        }
+        "getRingtonesPath" -> {
+          val path = getRingtonesPath()
+          if (path != null) result.success(path) else result.error("RINGTONES_PATH_ERROR", "Ringtones directory not available", null)
+        }
+        "getAlarmsPath" -> {
+          val path = getAlarmsPath()
+          if (path != null) result.success(path) else result.error("ALARMS_PATH_ERROR", "Alarms directory not available", null)
+        }
+        "getNotificationsPath" -> {
+          val path = getNotificationsPath()
+          if (path != null) result.success(path) else result.error("NOTIFICATIONS_PATH_ERROR", "Notifications directory not available", null)
+        }
+        "getDocumentsPath" -> {
+          val path = getDocumentsPath()
+          if (path != null) result.success(path) else result.error("DOCUMENTS_PATH_ERROR", "Documents directory not available", null)
+        }
+        "getPodcastsPath" -> {
+          val path = getPodcastsPath()
+          if (path != null) result.success(path) else result.error("PODCASTS_PATH_ERROR", "Podcasts directory not available", null)
+        }
+        "getScreenshotsPath" -> {
+          val path = getScreenshotsPath()
+          if (path != null) result.success(path) else result.error("SCREENSHOTS_PATH_ERROR", "Screenshots directory not available", null)
+        }
+        "getAudiobooksPath" -> {
+          val path = getAudiobooksPath()
+          if (path != null) result.success(path) else result.error("AUDIOBOOKS_PATH_ERROR", "Audiobooks directory not available", null)
+        }
+        "isExternalStorageWritable" -> result.success(isExternalStorageWritable())
+        "isExternalStorageReadable" -> result.success(isExternalStorageReadable())
         "getExternalStorageDirectories" -> {
-          val type = call.argument<String>("type")
+          val type = call.argument<String>("type")?.lowercase()
           val paths = getExternalStorageDirectories(type)
           if (paths.isNotEmpty()) {
             result.success(paths)
           } else {
-            result.error("EXTERNAL_DIRECTORIES_ERROR", "External directories are not available", null)
+            // Changed to return empty list instead of error to avoid crashes
+            result.success(emptyList<String>())
           }
         }
-        "isExternalStorageWritable" -> {
-          result.success(isExternalStorageWritable())
-        }
-        "isExternalStorageReadable" -> {
-          result.success(isExternalStorageReadable())
-        }
-        else -> {
-          result.notImplemented()
-        }
+        else -> result.notImplemented()
       }
     } catch (e: Exception) {
+      Log.e("NativeAndroidPath", "Error in method ${call.method}: ${e.message}", e)
       result.error("NATIVE_ERROR", "Error accessing storage paths: ${e.message}", e.stackTraceToString())
     }
   }
 
-  private fun getAllStoragePaths(): Map<String, String?> {
-    val paths = HashMap<String, String?>()
+  private fun getAllStoragePaths(): Map<String, Any> {
+    val paths = HashMap<String, Any>()
 
-    try {
-      paths["internalStorage"] = getInternalStoragePath()
-    } catch (e: Exception) {
-      paths["internalStorage"] = null
-    }
-
-    try {
-      paths["externalStorage"] = getExternalStoragePath()
-    } catch (e: Exception) {
-      paths["externalStorage"] = null
-    }
-
-    try {
-      paths["internalCache"] = getInternalCachePath()
-    } catch (e: Exception) {
-      paths["internalCache"] = null
-    }
-
-    try {
-      paths["externalCache"] = getExternalCachePath()
-    } catch (e: Exception) {
-      paths["externalCache"] = null
-    }
-
-    try {
-      paths["downloads"] = getDownloadPath()
-    } catch (e: Exception) {
-      paths["downloads"] = null
-    }
-
-    try {
-      paths["dcim"] = getDCIMPath()
-    } catch (e: Exception) {
-      paths["dcim"] = null
-    }
-
-    try {
-      paths["pictures"] = getPicturesPath()
-    } catch (e: Exception) {
-      paths["pictures"] = null
-    }
-
-    try {
-      paths["movies"] = getMoviesPath()
-    } catch (e: Exception) {
-      paths["movies"] = null
-    }
-
-    try {
-      paths["music"] = getMusicPath()
-    } catch (e: Exception) {
-      paths["music"] = null
-    }
-
-    try {
-      paths["ringtones"] = getRingtonesPath()
-    } catch (e: Exception) {
-      paths["ringtones"] = null
-    }
-
-    try {
-      paths["alarms"] = getAlarmsPath()
-    } catch (e: Exception) {
-      paths["alarms"] = null
-    }
-
-    try {
-      paths["notifications"] = getNotificationsPath()
-    } catch (e: Exception) {
-      paths["notifications"] = null
-    }
-
-    try {
-      paths["documents"] = getDocumentsPath()
-    } catch (e: Exception) {
-      paths["documents"] = null
-    }
-
-    try {
-      paths["podcasts"] = getPodcastsPath()
-    } catch (e: Exception) {
-      paths["podcasts"] = null
-    }
-
-    try {
-      paths["screenshots"] = getScreenshotsPath()
-    } catch (e: Exception) {
-      paths["screenshots"] = null
-    }
-
-    try {
-      paths["audiobooks"] = getAudiobooksPath()
-    } catch (e: Exception) {
-      paths["audiobooks"] = null
-    }
+    // Changed to return empty string instead of null to avoid issues in Flutter
+    try { paths["internalStorage"] = getInternalStoragePath() } catch (e: Exception) { paths["internalStorage"] = "" }
+    try { paths["externalStorage"] = getExternalStoragePath() ?: "" } catch (e: Exception) { paths["externalStorage"] = "" }
+    try { paths["internalCache"] = getInternalCachePath() } catch (e: Exception) { paths["internalCache"] = "" }
+    try { paths["externalCache"] = getExternalCachePath() ?: "" } catch (e: Exception) { paths["externalCache"] = "" }
+    try { paths["downloads"] = getDownloadPath() ?: "" } catch (e: Exception) { paths["downloads"] = "" }
+    try { paths["dcim"] = getDCIMPath() ?: "" } catch (e: Exception) { paths["dcim"] = "" }
+    try { paths["pictures"] = getPicturesPath() ?: "" } catch (e: Exception) { paths["pictures"] = "" }
+    try { paths["movies"] = getMoviesPath() ?: "" } catch (e: Exception) { paths["movies"] = "" }
+    try { paths["music"] = getMusicPath() ?: "" } catch (e: Exception) { paths["music"] = "" }
+    try { paths["ringtones"] = getRingtonesPath() ?: "" } catch (e: Exception) { paths["ringtones"] = "" }
+    try { paths["alarms"] = getAlarmsPath() ?: "" } catch (e: Exception) { paths["alarms"] = "" }
+    try { paths["notifications"] = getNotificationsPath() ?: "" } catch (e: Exception) { paths["notifications"] = "" }
+    try { paths["documents"] = getDocumentsPath() ?: "" } catch (e: Exception) { paths["documents"] = "" }
+    try { paths["podcasts"] = getPodcastsPath() ?: "" } catch (e: Exception) { paths["podcasts"] = "" }
+    try { paths["screenshots"] = getScreenshotsPath() ?: "" } catch (e: Exception) { paths["screenshots"] = "" }
+    try { paths["audiobooks"] = getAudiobooksPath() ?: "" } catch (e: Exception) { paths["audiobooks"] = "" }
 
     return paths
   }
@@ -193,11 +135,9 @@ class NativeAndroidPathPlugin: FlutterPlugin, MethodCallHandler {
   }
 
   private fun getExternalStoragePath(): String? {
-    return if (isExternalStorageWritable() || isExternalStorageReadable()) {
-      context.getExternalFilesDir(null)?.absolutePath
-    } else {
-      null
-    }
+    return if (isExternalStorageReadable()) {
+      Environment.getExternalStorageDirectory()?.absolutePath
+    } else null
   }
 
   private fun getInternalCachePath(): String {
@@ -205,134 +145,126 @@ class NativeAndroidPathPlugin: FlutterPlugin, MethodCallHandler {
   }
 
   private fun getExternalCachePath(): String? {
+    // For app-specific external cache directory:
     return context.externalCacheDir?.absolutePath
+
+    // If you still want the public cache directory:
+    // return Environment.getExternalStorageDirectory()?.let {
+    //   File(it, "Cache").apply { if (!exists()) mkdirs() }.absolutePath
+    // }
   }
 
   private fun getDownloadPath(): String? {
-    return context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.absolutePath
-      ?: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)?.absolutePath
+    return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)?.absolutePath
   }
 
   private fun getDCIMPath(): String? {
-    return context.getExternalFilesDir(Environment.DIRECTORY_DCIM)?.absolutePath
-      ?: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)?.absolutePath
+    return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)?.absolutePath
   }
 
   private fun getPicturesPath(): String? {
-    return context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.absolutePath
-      ?: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)?.absolutePath
+    return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)?.absolutePath
   }
 
   private fun getMoviesPath(): String? {
-    return context.getExternalFilesDir(Environment.DIRECTORY_MOVIES)?.absolutePath
-      ?: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)?.absolutePath
+    return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)?.absolutePath
   }
 
   private fun getMusicPath(): String? {
-    return context.getExternalFilesDir(Environment.DIRECTORY_MUSIC)?.absolutePath
-      ?: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)?.absolutePath
+    return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)?.absolutePath
   }
 
   private fun getRingtonesPath(): String? {
-    return context.getExternalFilesDir(Environment.DIRECTORY_RINGTONES)?.absolutePath
-      ?: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES)?.absolutePath
+    return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES)?.absolutePath
   }
 
   private fun getAlarmsPath(): String? {
-    return context.getExternalFilesDir(Environment.DIRECTORY_ALARMS)?.absolutePath
-      ?: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_ALARMS)?.absolutePath
+    return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_ALARMS)?.absolutePath
   }
 
   private fun getNotificationsPath(): String? {
-    return context.getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS)?.absolutePath
-      ?: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_NOTIFICATIONS)?.absolutePath
+    return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_NOTIFICATIONS)?.absolutePath
   }
 
   private fun getDocumentsPath(): String? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.absolutePath
-        ?: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)?.absolutePath
+      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)?.absolutePath
     } else {
-      // For older versions, create a documents directory in external storage
-      val documents = File(Environment.getExternalStorageDirectory(), "Documents")
-      if (!documents.exists()) {
-        documents.mkdirs()
-      }
-      documents.absolutePath
+      File(Environment.getExternalStorageDirectory(), "Documents").apply {
+        if (!exists()) mkdirs()
+      }.absolutePath
+    }
+  }
+
+  private fun getPodcastsPath(): String? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS)?.absolutePath
+    } else {
+      File(Environment.getExternalStorageDirectory(), "Podcasts").apply {
+        if (!exists()) mkdirs()
+      }.absolutePath
+    }
+  }
+
+  private fun getScreenshotsPath(): String? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_SCREENSHOTS)?.absolutePath
+    } else {
+      File(Environment.getExternalStorageDirectory(), "Pictures/Screenshots").apply {
+        if (!exists()) mkdirs()
+      }.absolutePath
+    }
+  }
+
+  private fun getAudiobooksPath(): String? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_AUDIOBOOKS)?.absolutePath
+    } else {
+      File(Environment.getExternalStorageDirectory(), "Audiobooks").apply {
+        if (!exists()) mkdirs()
+      }.absolutePath
     }
   }
 
   private fun getExternalStorageDirectories(type: String?): List<String> {
-    val directoryType = when (type) {
+    val paths = mutableListOf<String>()
+
+    // Android 10+ (API 29+) needs special handling for external storage
+    val directoryType = when (type?.lowercase()) {
       "downloads" -> Environment.DIRECTORY_DOWNLOADS
       "pictures" -> Environment.DIRECTORY_PICTURES
       "dcim" -> Environment.DIRECTORY_DCIM
       "movies" -> Environment.DIRECTORY_MOVIES
       "music" -> Environment.DIRECTORY_MUSIC
       "documents" -> Environment.DIRECTORY_DOCUMENTS
+      "podcasts" -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) Environment.DIRECTORY_PODCASTS else null
+      "screenshots" -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) Environment.DIRECTORY_SCREENSHOTS else null
+      "audiobooks" -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) Environment.DIRECTORY_AUDIOBOOKS else null
       else -> null
     }
 
-    val paths = mutableListOf<String>()
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      val externalDirs = context.getExternalFilesDirs(directoryType)
-      for (dir in externalDirs) {
-        if (dir != null) {
-          paths.add(dir.absolutePath)
-        }
-      }
-    } else {
-      // Fallback for older Android versions
-      context.getExternalFilesDir(directoryType)?.let {
+    if (directoryType != null) {
+      // For the primary external storage
+      Environment.getExternalStoragePublicDirectory(directoryType)?.let {
         paths.add(it.absolutePath)
       }
-    }
 
-    return paths
-  }
-
-
-  private fun getPodcastsPath(): String? {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // Android 10 یا بالاتر
-      context.getExternalFilesDir(Environment.DIRECTORY_PODCASTS)?.absolutePath
-        ?: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS)?.absolutePath
-    } else {
-      // برای نسخه‌های قدیمی‌تر، یک دایرکتوری Podcasts در حافظه خارجی ایجاد می‌کنیم
-      val podcasts = File(Environment.getExternalStorageDirectory(), "Podcasts")
-      if (!podcasts.exists()) {
-        podcasts.mkdirs()
+      // For additional storage volumes on devices with multiple external storage options
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        context.getExternalFilesDirs(directoryType)?.forEach { file ->
+          file?.let {
+            // Remove the app-specific part of the path to get the root of the external storage
+            val path = it.absolutePath
+            val pathSegments = path.split("/Android/")
+            if (pathSegments.isNotEmpty()) {
+              paths.add(pathSegments[0])
+            }
+          }
+        }
       }
-      podcasts.absolutePath
     }
-  }
 
-  private fun getScreenshotsPath(): String? {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // Android 10 یا بالاتر
-      context.getExternalFilesDir(Environment.DIRECTORY_SCREENSHOTS)?.absolutePath
-        ?: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_SCREENSHOTS)?.absolutePath
-    } else {
-      // برای نسخه‌های قدیمی‌تر، یک دایرکتوری Screenshots در پوشه Pictures ایجاد می‌کنیم
-      val screenshots = File(Environment.getExternalStorageDirectory(), "Pictures/Screenshots")
-      if (!screenshots.exists()) {
-        screenshots.mkdirs()
-      }
-      screenshots.absolutePath
-    }
-  }
-
-
-  private fun getAudiobooksPath(): String? {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // Android 10 یا بالاتر
-      context.getExternalFilesDir(Environment.DIRECTORY_AUDIOBOOKS)?.absolutePath
-        ?: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_AUDIOBOOKS)?.absolutePath
-    } else {
-      val audiobooks = File(Environment.getExternalStorageDirectory(), "Audiobooks")
-      if (!audiobooks.exists()) {
-        audiobooks.mkdirs()
-      }
-      audiobooks.absolutePath
-    }
+    return paths.distinct()  // Remove duplicates
   }
 
   private fun isExternalStorageWritable(): Boolean {

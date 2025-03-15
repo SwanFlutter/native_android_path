@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:native_android_path/native_android_path.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: Colors.red,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.blue,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ),
+  );
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -52,17 +62,15 @@ class _NativePathDemoState extends State<NativePathDemo> {
   final _nativeAndroidPath = NativeAndroidPath();
   String _result = 'Press a button to see the result';
 
-  /// متد برای نمایش نتیجه در یک کارت زیبا
   Widget _buildResultCard() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Text(_result, style: const TextStyle(fontSize: 16)),
+        child: SelectableText(_result, style: const TextStyle(fontSize: 16)),
       ),
     );
   }
 
-  /// متد برای ایجاد دکمه‌های عملیاتی
   Widget _buildActionButton(String text, VoidCallback onPressed) {
     return ElevatedButton(
       onPressed: onPressed,
@@ -74,7 +82,6 @@ class _NativePathDemoState extends State<NativePathDemo> {
     );
   }
 
-  /// متدها برای دریافت مسیرها و نمایش نتایج
   Future<void> _getPlatformVersion() async {
     try {
       final version = await _nativeAndroidPath.getPlatformVersion();
@@ -100,6 +107,7 @@ class _NativePathDemoState extends State<NativePathDemo> {
         _result = 'Error getting all paths: $e';
       });
     }
+    debugPrint(_result);
   }
 
   Future<void> _getInternalStoragePath() async {
@@ -113,6 +121,7 @@ class _NativePathDemoState extends State<NativePathDemo> {
         _result = 'Error getting internal storage path: $e';
       });
     }
+    debugPrint(_result);
   }
 
   Future<void> _getExternalStoragePath() async {
@@ -126,6 +135,7 @@ class _NativePathDemoState extends State<NativePathDemo> {
         _result = 'Error getting external storage path: $e';
       });
     }
+    debugPrint(_result);
   }
 
   Future<void> _getDownloadPath() async {
@@ -139,6 +149,7 @@ class _NativePathDemoState extends State<NativePathDemo> {
         _result = 'Error getting download path: $e';
       });
     }
+    debugPrint(_result);
   }
 
   Future<void> _getPicturesPath() async {
@@ -152,6 +163,7 @@ class _NativePathDemoState extends State<NativePathDemo> {
         _result = 'Error getting pictures path: $e';
       });
     }
+    debugPrint(_result);
   }
 
   Future<void> _isExternalStorageWritable() async {
@@ -165,6 +177,7 @@ class _NativePathDemoState extends State<NativePathDemo> {
         _result = 'Error checking writable status: $e';
       });
     }
+    debugPrint(_result);
   }
 
   Future<void> _getExternalStorageDirectories() async {
@@ -180,6 +193,7 @@ class _NativePathDemoState extends State<NativePathDemo> {
         _result = 'Error getting external directories: $e';
       });
     }
+    debugPrint(_result);
   }
 
   Future<void> _getPodcastsPath() async {
@@ -193,6 +207,7 @@ class _NativePathDemoState extends State<NativePathDemo> {
         _result = 'Error getting podcasts path: $e';
       });
     }
+    debugPrint(_result);
   }
 
   Future<void> _getScreenshotsPath() async {
@@ -206,6 +221,7 @@ class _NativePathDemoState extends State<NativePathDemo> {
         _result = 'Error getting screenshots path: $e';
       });
     }
+    debugPrint(_result);
   }
 
   Future<void> _getAudiobooksPath() async {
@@ -219,6 +235,7 @@ class _NativePathDemoState extends State<NativePathDemo> {
         _result = 'Error getting audiobooks path: $e';
       });
     }
+    debugPrint(_result);
   }
 
   @override
