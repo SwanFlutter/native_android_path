@@ -15,7 +15,7 @@ dependencies:
 
 ```yaml
 dependencies:
-  native_android_path: ^0.0.2
+  native_android_path: ^0.0.3
 ```
 
 Then run:
