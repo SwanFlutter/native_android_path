@@ -100,7 +100,7 @@ class _NativePathDemoState extends State<NativePathDemo> {
       final paths = await _nativeAndroidPath.getAllPaths();
       setState(() {
         _result =
-        'All Paths:\n${paths.entries.map((e) => '${e.key}: ${e.value}').join('\n')}';
+            'All Paths:\n${paths.entries.map((e) => '${e.key}: ${e.value}').join('\n')}';
       });
     } catch (e) {
       setState(() {

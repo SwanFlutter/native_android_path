@@ -7,7 +7,6 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 class MockNativeAndroidPathPlatform
     with MockPlatformInterfaceMixin
     implements NativeAndroidPathPlatform {
-
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
 
@@ -133,7 +132,8 @@ class MockNativeAndroidPathPlatform
 }
 
 void main() {
-  final NativeAndroidPathPlatform initialPlatform = NativeAndroidPathPlatform.instance;
+  final NativeAndroidPathPlatform initialPlatform =
+      NativeAndroidPathPlatform.instance;
 
   test('$MethodChannelNativeAndroidPath is the default instance', () {
     expect(initialPlatform, isInstanceOf<MethodChannelNativeAndroidPath>());
@@ -141,7 +141,8 @@ void main() {
 
   test('getPlatformVersion', () async {
     NativeAndroidPath nativeAndroidPathPlugin = NativeAndroidPath();
-    MockNativeAndroidPathPlatform fakePlatform = MockNativeAndroidPathPlatform();
+    MockNativeAndroidPathPlatform fakePlatform =
+        MockNativeAndroidPathPlatform();
     NativeAndroidPathPlatform.instance = fakePlatform;
 
     expect(await nativeAndroidPathPlugin.getPlatformVersion(), '42');

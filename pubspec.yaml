@@ -1,5 +1,5 @@
 name: native_android_path
-description: "A new Flutter project."
+description: "A Flutter plugin that provides access to various storage paths on Android devices."
 version: 0.0.3
 homepage:
 
