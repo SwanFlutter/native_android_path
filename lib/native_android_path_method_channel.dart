@@ -259,6 +259,17 @@ class MethodChannelNativeAndroidPath extends NativeAndroidPathPlatform {
     }
   }
 
+  @override
+  Future<String?> getRootInstallationPath() async {
+    try {
+      if (!Platform.isAndroid) throw _unsupportedPlatformException();
+      return await methodChannel.invokeMethod<String>('getRootInstallationPath');
+    } on PlatformException catch (e) {
+      debugPrint('Error getting root installation path: ${e.message}');
+      return null;
+    }
+  }
+
   PlatformException _unsupportedPlatformException() {
     return PlatformException(
       code: 'UNSUPPORTED_PLATFORM',

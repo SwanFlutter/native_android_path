@@ -238,6 +238,20 @@ class _NativePathDemoState extends State<NativePathDemo> {
     debugPrint(_result);
   }
 
+  Future<void> _getRootInstallationPath() async {
+    try {
+      final path = await _nativeAndroidPath.getRootInstallationPath();
+      setState(() {
+        _result = 'Root Installation Path: ${path ?? 'Unknown'}';
+      });
+    } catch (e) {
+      setState(() {
+        _result = 'Error getting root installation path: $e';
+      });
+    }
+    debugPrint(_result);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -274,6 +288,11 @@ class _NativePathDemoState extends State<NativePathDemo> {
             _buildActionButton('Get Screenshots Path', _getScreenshotsPath),
 
             _buildActionButton('Get Audiobooks Path', _getAudiobooksPath),
+
+            _buildActionButton(
+              'Get Root Installation Path',
+              _getRootInstallationPath,
+            ),
 
             _buildActionButton(
               'Is External Storage Writable',

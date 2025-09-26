@@ -15,7 +15,7 @@ dependencies:
 
 ```yaml
 dependencies:
-  native_android_path: ^0.0.4
+  native_android_path: ^0.0.5
 ```
 
 Then run:
@@ -145,6 +145,23 @@ Future<void> showExternalCache() async {
     print('External cache path: $path');
   } catch (e) {
     print('Error getting external cache path: $e');
+  }
+}
+```
+
+### `getRootInstallationPath()`
+
+Returns the root installation path where applications are installed (typically `/data`).
+
+**Example:**
+
+```dart
+Future<void> showRootInstallationPath() async {
+  try {
+    String? path = await NativeAndroidPath().getRootInstallationPath();
+    print('Root installation path: $path');
+  } catch (e) {
+    print('Error getting root installation path: $e');
   }
 }
 ```

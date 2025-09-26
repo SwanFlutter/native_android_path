@@ -122,4 +122,10 @@ abstract class NativeAndroidPathPlatform extends PlatformInterface {
       'getExternalStorageDirectories() has not been implemented.',
     );
   }
+
+  Future<String?> getRootInstallationPath() {
+    throw UnimplementedError(
+      'getRootInstallationPath() has not been implemented.',
+    );
+  }
 }

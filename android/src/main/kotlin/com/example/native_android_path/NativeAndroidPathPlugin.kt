@@ -98,6 +98,10 @@ class NativeAndroidPathPlugin : FlutterPlugin, MethodCallHandler {
             result.success(emptyList<String>())
           }
         }
+        "getRootInstallationPath" -> {
+          val path = getRootInstallationPath()
+          if (path != null) result.success(path) else result.error("ROOT_INSTALL_PATH_ERROR", "Root installation path not available", null)
+        }
         else -> result.notImplemented()
       }
     } catch (e: Exception) {
@@ -126,6 +130,7 @@ class NativeAndroidPathPlugin : FlutterPlugin, MethodCallHandler {
     try { paths["podcasts"] = getPodcastsPath() ?: "" } catch (e: Exception) { paths["podcasts"] = "" }
     try { paths["screenshots"] = getScreenshotsPath() ?: "" } catch (e: Exception) { paths["screenshots"] = "" }
     try { paths["audiobooks"] = getAudiobooksPath() ?: "" } catch (e: Exception) { paths["audiobooks"] = "" }
+    try { paths["rootInstallation"] = getRootInstallationPath() ?: "" } catch (e: Exception) { paths["rootInstallation"] = "" }
 
     return paths
   }
@@ -265,6 +270,33 @@ class NativeAndroidPathPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     return paths.distinct()  // Remove duplicates
+  }
+
+  private fun getRootInstallationPath(): String? {
+    return try {
+      // Return the root filesystem path where system apps are installed
+      // This is typically "/system" but we return "/" as the root
+      // Apps are typically installed in /system/app, /system/priv-app, /data/app, etc.
+      // For user-installed apps, they are in /data/app
+      // For system apps, they are in /system/app or /system/priv-app
+      
+      // We'll return the data partition root where user apps are installed
+      val dataDir = context.applicationInfo.dataDir
+      if (dataDir != null) {
+        // Extract the root path from the data directory
+        // Typically /data/data/package.name -> we want /data
+        val pathSegments = dataDir.split("/")
+        if (pathSegments.size >= 3) {
+          return "/${pathSegments[1]}" // This will be "/data"
+        }
+      }
+      
+      // Fallback: return the system root
+      "/"
+    } catch (e: Exception) {
+      Log.e("NativeAndroidPath", "Error getting root installation path: ${e.message}", e)
+      null
+    }
   }
 
   private fun isExternalStorageWritable(): Boolean {

@@ -366,4 +366,25 @@ class NativeAndroidPath {
       type,
     );
   }
+
+  /// Returns the root installation path where apps are installed.
+  ///
+  /// This method retrieves the root path where applications like Telegram, WhatsApp, etc.
+  /// are installed on the Android system. This is typically the system partition path.
+  /// Returns null if an error occurs or the path cannot be determined.
+  ///
+  /// Example:
+  /// ```dart
+  /// String? rootInstallPath = await NativeAndroidPath().getRootInstallationPath();
+  /// if (rootInstallPath != null) {
+  ///   print('Root Installation Path: $rootInstallPath');
+  /// } else {
+  ///   print('Root installation path not available.');
+  /// }
+  ///
+  ///
+  /// ```
+  Future<String?> getRootInstallationPath() {
+    return NativeAndroidPathPlatform.instance.getRootInstallationPath();
+  }
 }
