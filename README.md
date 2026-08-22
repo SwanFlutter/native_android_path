@@ -10,12 +10,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  native_android_path: ^latest_version
-```
-
-```yaml
-dependencies:
-  native_android_path: ^1.0.0
+  native_android_path: ^1.0.1
 ```
 
 Then run:
@@ -548,6 +543,56 @@ To support Android 13, your `AndroidManifest.xml` file should look like this:
 
 2. **Use of `MediaStore`**:
     - To access media files in Android 13, you must use `MediaStore`. This API allows you to access photo, video, and music files.
+
+---
+
+## Troubleshooting
+
+### Windows: Cross-Drive Kotlin Compilation Crash
+
+**Symptom** — Build fails with:
+
+```
+java.lang.IllegalArgumentException: this and base files have different roots:
+C:\Users\...\AppData\Local\Pub\Cache\...\NativeAndroidPathPlugin.kt
+and G:\Android\my_project\android
+```
+
+Or the full Kotlin daemon crash chain:
+
+```
+e: Daemon compilation failed
+Caused by: java.lang.AssertionError:
+  Could not close incremental caches in
+  ...\compileDebugKotlin\cacheable\caches-jvm\jvm\kotlin:
+  class-fq-name-to-source.tab, source-to-classes.tab, internal-name-to-source.tab
+```
+
+**Root cause** — Kotlin's incremental compiler stores source file paths as
+relative paths using `File.relativeTo()`. On Windows this fails when the Flutter
+Pub Cache (`C:\`) and your project (e.g. `G:\`) are on **different drives** — there
+is no relative path between two different Windows drive letters.
+
+**Fix (v1.0.1+)** — This plugin already ships `android/gradle.properties` with:
+
+```properties
+kotlin.incremental=false
+```
+
+If you are pinning an older version or building a similar plugin from scratch,
+create that file next to `build.gradle.kts` and add the line above. See
+[`FLUTTER_PLUGIN_FIXES.md`](FLUTTER_PLUGIN_FIXES.md) for the full explanation
+and a checklist for other Windows-specific issues.
+
+**Compatible version set (tested on Windows with cross-drive setup)**
+
+| Component | Version |
+|-----------|---------|
+| Gradle wrapper | 8.11.1 |
+| AGP (`com.android.tools.build:gradle`) | 8.7.3 |
+| Kotlin Gradle Plugin | 2.1.21 |
+| `compileSdk` | 35 / 36 |
+| `jvmTarget` | JVM_17 |
 
 ---
 

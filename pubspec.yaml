@@ -1,6 +1,6 @@
 name: native_android_path
 description: "A Flutter plugin that provides access to various storage paths on Android devices."
-version: 1.0.0
+version: 1.0.1
 homepage: "https://github.com/SwanFlutter/native_android_path"
 
 environment:
